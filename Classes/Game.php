@@ -51,38 +51,50 @@ class Game {
     public function round() {
 
         $tmp = array();
+        $tmp_hidden = array();
 
-        while (!empty($this->player1_deck ) || !empty($this->player2_deck)) {
-            if (empty($this->player1_deck) || empty($this->player2_deck)) {
-                break;
-            }
-
+        while (!empty($this->player1_deck) && !empty($this->player2_deck)) {
+            Display::roundSeparator();
             $card1 = array_shift($this->player1_deck);
             $card2 = array_shift($this->player2_deck);
-
-            Display::displayText("$this->player1_name joue: $card1", true);
+            $exploded1 = explode(" ",$card1);
+            $exploded2 = explode(" ",$card2);
+            $p1_value = $exploded1[0];
+            $p2_value = $exploded2[0];
+        
+            Display::displayText("$this->player1_name joue: $card1   ");
             Display::displayText("$this->player2_name joue: $card2", true);
+            (is_numeric($p1_value)) ? Display::cardArt($exploded1[2], $p1_value) : Display::cardArt($exploded1[2], $p1_value[0]);
+            Game::battleHiddenDisplayer($tmp, "p1");
+            (is_numeric($p2_value)) ? Display::cardArt($exploded2[2], $p2_value) : Display::cardArt($exploded2[2], $p2_value[0]);
+            Game::battleHiddenDisplayer($tmp, "p2");
+            Display::jumpLine();
             Display::jumpLine();
             //Timers::sleep1sec();
-            $p1_value = explode(" ",$card1)[0];
-            $p2_value = explode(" ", $card2)[0];
-
-            //Timers::sleep1sec();
-
+            
             $weight_p1 = $this->cardsWeight["$p1_value"];
             $weight_p2 = $this->cardsWeight["$p2_value"];
 
             if ($weight_p1 > $weight_p2) {
+                //Game::result($card1, $card2, "p2");
+                
                 $this->player1_deck[] = $card1;
                 $this->player1_deck[] = $card2;
                 if (!empty($tmp)) {
                     Display::displayText("$this->player1_name remporte la bataille!! MOUHAHAHA!", true);
                     Display::displayText("$this->player1_name gagne les cartes: '$card1' '$card2'");
                     foreach($tmp as $value) {
-                        Display::displaytext(" '$value' ");
+                        Display::displaytext(" '$value'");
+                        $this->player1_deck[] = $value;
+                    }
+                    Display::jumpLine();
+                    Display::displayText("$this->player1_name gagne les cartes cachées:");
+                    foreach($tmp_hidden as $value) {
+                        Display::displaytext(" '$value'");
                         $this->player1_deck[] = $value;
                     }
                     $tmp = array();
+                    $tmp_hidden = array();
                     Display::jumpLine();
                     Display::jumpLine();
                 }
@@ -90,18 +102,28 @@ class Game {
                     Display::displayText("$this->player1_name gagne les cartes:  '$card1' et '$card2'", true);
                     Display::jumpLine();
                 }
+                
             }
             else if ($weight_p1 < $weight_p2) {
+                // Game::result($card1, $card2, "p2");
+                
                 $this->player2_deck[] = $card2;
                 $this->player2_deck[] = $card1;
                 if (!empty($tmp)) {
                     Display::displayText("$this->player2_name remporte la bataille!! MOUHAHAHA!", true);
                     Display::displayText("$this->player2_name gagne les cartes: '$card2' '$card1'");
                     foreach($tmp as $value) {
-                        Display::displaytext(" '$value' ");
+                        Display::displaytext(" '$value'");
+                        $this->player2_deck[] = $value;
+                    }
+                    Display::jumpLine();
+                    Display::displayText("$this->player2_name gagne les cartes cachées:");
+                    foreach($tmp_hidden as $value) {
+                        Display::displaytext(" '$value'");
                         $this->player2_deck[] = $value;
                     }
                     $tmp = array();
+                    $tmp_hidden = array();
                     Display::jumpLine();
                     Display::jumpLine();
                 }
@@ -114,11 +136,17 @@ class Game {
                 Display::battleArt();
                 $tmp[] = $card1;
                 $tmp[] = $card2;
+                $tmp_hidden[] = array_shift($this->player1_deck);
+                $tmp_hidden[] = array_shift($this->player2_deck);
+                
             }
-        }
+
+            //Timers::sleep1sec();
+        } ;
 
         Display::jumpLine();
         Display::jumpLine();
+
         if (empty($this->player1_deck)) {
             return $this->player2_name;
         }
@@ -127,13 +155,20 @@ class Game {
         }
     }
 
-    // public function tester($c1, $c2, $v1, $v2) {
-        
+    public function battleHiddenDisplayer($tmp,$p) {
 
-        
-    // }
+        if (!empty($tmp)) {
+            if ($p == "p1") {
+                $e = explode(" ", $tmp[0]);
+            }
+            else{
+                $e = explode(" ", $tmp[1]);
+            }
+            (is_numeric($e)) ? $e[0] : $e = $e[0][0];
+            for($i = 0; $i <= count($tmp) / 2; $i+=2) {
+                Display::visibleCard($e, count($tmp));
+            }
+        }
+    }
 
-    // public function battle() {
-        
-    // }
 }

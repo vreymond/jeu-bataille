@@ -20,16 +20,100 @@ trait Timers {
 trait Display {
     public function gameArt() {
         $art = '        
-         _____ 
-        |A .  | _____
-        | /.\ ||A ^  | _____
-        |(_._)|| / \ ||A _  | _____
-        |  |  || \ / || ( ) ||A_ _ |
-        |____A||  .  ||(_|_)||( v )|
-               |____A||  |  || \ / |
-                      |____A||  .  |
-                             |____A|';
+         _______ 
+        |A  .   | _______
+        |  /.\  ||A  ^   | _______
+        | (_._) ||  / \  ||A  _   | _______
+        |   |   ||  \ /  ||  ( )  ||A _ _  |
+        |_____ A||   .   || (_|_) || ( v ) |
+                 |_____ A||   |   ||  \ /  |
+                          |_____ A||   .   |
+                                   |_____ A|';
         return Display::displayText($art,true);
+    }
+
+    public function cardArt($color, $value) {
+
+        if ($value == 10) {
+            $value_bot = $value; 
+            $value_top = $value;
+        }
+        else {
+            $value_bot = ' ' . $value;
+            $value_top = $value . ' ';
+        };
+        
+        switch ($color) {
+
+            case "Spades":
+                $art = " 
+                 _______ 
+                |$value_top .   |
+                |  /.\  |
+                | (_._) |
+                |   |   |
+                |_____$value_bot|";
+                return Display::displayText($art);;
+                break;
+
+            case "Clubs":
+                $art = " 
+                 _______
+                |$value_top _   |
+                |  ( )  |
+                | (_|_) |
+                |   |   |
+                |_____$value_bot|";
+                return Display::displayText($art);;
+                break;
+
+            case "Hearts":
+                $art = "
+                 _______
+                |$value_top"."_ _  |
+                | ( v ) |
+                |  \ /  |
+                |   .   |
+                |_____$value_bot|";
+                return Display::displayText($art);;
+                break;
+
+            case "Diamonds":
+                $art = "
+                 _______
+                |$value_top ^   |
+                |  / \  |
+                |  \ /  |
+                |   .   |
+                |_____$value_bot|";
+                return Display::displayText($art);;
+                break;
+        }
+    }
+
+    // public function hiddenCard($space) {
+    //     $spaces = "";
+    //     for ($i = 0; $i<= $space; $i++) {
+    //         $spaces . " ";
+    //     }
+    //     $art = "
+    //             "."$spaces"."|_______|
+    //     ";
+    //     return Display::displayText($art);
+    // }
+
+    public function visibleCard($value, $space) {
+        $spaces = "";
+        for ($i = 0; $i<= $space; $i++) {
+            $spaces = $spaces . " ";
+        }
+
+        ($value == 10) ? $value_bot = $value : $value_bot = ' ' . $value;
+        
+        $art = "
+                "."$spaces"."|_______|
+                "."$spaces"." "." "."|_____$value_bot|";
+        return Display::displayText($art);
     }
 
     public function battleArt() {
@@ -42,6 +126,26 @@ trait Display {
         ';
 
         return Display::displayText($art,true);
+    }
+
+    public function sadFace() {
+        $art = "
+          .--------.
+        .'          '.
+       /   O      O   \
+      :           `    :
+      |            `   |
+      :    .------.    :
+       \  '        '  /
+        '.          .'
+          '-......-'
+        ";
+
+        return Display::displayText($art,true);
+    }
+
+    public function roundSeparator() {
+        return Display::displayText("************************************************************************", true);
     }
 
     public function jumpLine() {

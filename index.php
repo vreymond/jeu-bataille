@@ -60,6 +60,22 @@ class CardGame {
         $winner = $autoGame->starter();
 
         Display::displaytext("Le grand gagnant est: $winner !!!");
+        Display::jumpLine();
+
+        $playAgain = readline("Voulez vous rejouer? (o/n): ");
+        while ($playAgain != "o" && $playAgain != "n") {
+            $playAgain = readline("J'ai pas compris, voulez vous rejouer? (o/n): ");
+        }
+        if ($playAgain == "o") {
+            $newPlayer1 = readline("Entrez le nom du joueur 1 : ");
+            $newPlayer2 = readline("Entrez le nom du joueur 2 : ");
+            CardGame::startGame($newPlayer1, $newPlayer2);
+        }
+        else {
+            Display::sadFace();
+            Display::jumpLine();
+            Display::jumpLine();
+        }
     }
 }
 
